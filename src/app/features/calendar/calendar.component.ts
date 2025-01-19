@@ -1,10 +1,10 @@
+import {CalendarHeaderDayInputComponent} from './components/calendar-header-day-input.component';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material/sidenav';
 import {CalendarContentComponent} from './components/calendar-content.component';
 import {CalendarSidebarComponent} from './components/calendar-sidebar.component';
 import {CalendarHeaderComponent} from './components/calendar-header.component';
 import {MatToolbar} from '@angular/material/toolbar';
 import {Component, signal} from '@angular/core';
-import {CalendarHeaderDayInputComponent} from './components/calendar-header-day-input.component';
 
 @Component({
   selector: 'app-calendar',
@@ -38,5 +38,5 @@ import {CalendarHeaderDayInputComponent} from './components/calendar-header-day-
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent {
-  selectedDate = signal<Date | null>(null);
+  selectedDate = signal<Date>(new Date());
 }
