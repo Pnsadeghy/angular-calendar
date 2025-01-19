@@ -2,6 +2,7 @@ import {Component, input} from '@angular/core';
 
 @Component({
   selector: 'app-calendar-content',
+  standalone: true,
   imports: [],
   template: `
     <p>

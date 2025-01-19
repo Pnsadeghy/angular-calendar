@@ -1,3 +1,4 @@
+import {AppointmentService} from './services/appointment.service';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
@@ -10,8 +11,8 @@ import {NgModule} from '@angular/core';
     RouterModule.forChild(routes)
   ],
   providers: [
-    provideNativeDateAdapter()
-  ],
-  exports: []
+    provideNativeDateAdapter(),
+    AppointmentService
+  ]
 })
 export class CalendarModule {}

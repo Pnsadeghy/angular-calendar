@@ -6,6 +6,7 @@ import {addDaysToDate} from '../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-calendar-day-input',
+  standalone: true,
   imports: [
     MatIconModule,
     MatIconButton,
