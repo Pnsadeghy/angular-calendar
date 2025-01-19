@@ -16,7 +16,7 @@ import {Appointment} from '../models/appointment.model';
 import {TimeInputComponent} from '../../../shared/components/time-input.component';
 
 @Component({
-  selector: 'app-calendar-new-appointment',
+  selector: 'app-calendar-edit-appointment',
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -31,7 +31,7 @@ import {TimeInputComponent} from '../../../shared/components/time-input.componen
   ],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <h2 mat-dialog-title>New Calendar appointment</h2>
+      <h2 mat-dialog-title>Edit Calendar appointment</h2>
       <mat-dialog-content>
         <div class="date-inputs" >
           <app-date-input [control]="form.controls['date']" label="Date" />
@@ -49,8 +49,9 @@ import {TimeInputComponent} from '../../../shared/components/time-input.componen
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-raised-button [disabled]="form.invalid" >Add</button>
-        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button [disabled]="form.invalid" >Save changes</button>
+        <button mat-stroked-button type="button" (click)="onDelete()">Delete</button>
+        <button mat-button mat-dialog-close type="button">Cancel</button>
       </mat-dialog-actions>
     </form>
   `,
@@ -69,15 +70,15 @@ import {TimeInputComponent} from '../../../shared/components/time-input.componen
     }
   `
 })
-export class CalendarNewAppointmentComponent {
-  readonly dialogRef = inject(MatDialogRef<CalendarNewAppointmentComponent>);
-  readonly data = inject<{date: Date}>(MAT_DIALOG_DATA);
+export class CalendarEditAppointmentComponent {
+  readonly dialogRef = inject(MatDialogRef<CalendarEditAppointmentComponent>);
+  readonly data = inject<{appointment: Appointment}>(MAT_DIALOG_DATA);
   appointmentService = inject(AppointmentService);
 
   form = new FormGroup({
-    date: new FormControl(this.data.date, [Validators.required]),
-    title: new FormControl('', [Validators.required]),
-    description: new FormControl('')
+    date: new FormControl(this.data.appointment.date, [Validators.required]),
+    title: new FormControl(this.data.appointment.title, [Validators.required]),
+    description: new FormControl(this.data.appointment.description)
   })
 
   constructor() {}
@@ -85,14 +86,20 @@ export class CalendarNewAppointmentComponent {
   onSubmit() {
     const { date, title, description } = this.form.value;
 
-    const newAppointment = {
-      id: '',
+    const updatedAppointment = {
+      id: this.data.appointment.id,
       date,
       title,
       description
     };
 
-    this.appointmentService.add(newAppointment as Appointment);
+    this.appointmentService.update(updatedAppointment as Appointment);
+
+    this.dialogRef.close();
+  }
+
+  onDelete() {
+    this.appointmentService.delete(this.data.appointment.id);
 
     this.dialogRef.close();
   }

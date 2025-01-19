@@ -1,26 +1,29 @@
-import {CalendarDayInputComponent} from './components/calendar-day-input.component';
+import {CalendarNewAppointmentComponent} from './components/calendar-new-appointment.component';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material/sidenav';
-import {CalendarContentComponent} from './components/calendar-content.component';
+import {CalendarDayInputComponent} from './components/calendar-day-input.component';
 import {CalendarSidebarComponent} from './components/calendar-sidebar.component';
 import {CalendarHeaderComponent} from './components/calendar-header.component';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatToolbar} from '@angular/material/toolbar';
 import {Component, signal} from '@angular/core';
-import {CalendarNewAppointmentComponent} from './components/calendar-new-appointment.component';
+import {CalendarListComponent} from './components/calendar-list.component';
+import {changeDateHour} from '../../shared/utils/date.utils';
+import {Appointment} from './models/appointment.model';
+import {CalendarEditAppointmentComponent} from './components/calendar-edit-appointment.component';
 
 @Component({
   selector: 'app-calendar',
-  standalone: true,
   imports: [
     CalendarHeaderComponent,
     MatDrawerContainer,
     MatDrawerContent,
     MatDrawer,
     CalendarSidebarComponent,
-    CalendarContentComponent,
     MatToolbar,
     CalendarDayInputComponent,
-    MatDialogModule
+    MatDialogModule,
+    CalendarListComponent,
+    CalendarListComponent
   ],
   template: `
     <div class="calendar-container">
@@ -34,7 +37,9 @@ import {CalendarNewAppointmentComponent} from './components/calendar-new-appoint
           <app-calendar-sidebar (addCalendar)="onAddNewAppointment()" [(selectedDate)]="selectedDate" />
         </mat-drawer>
         <mat-drawer-content>
-          <app-calendar-content [selectedDate]="selectedDate()" />
+          <app-calendar-list [selectedDate]="selectedDate()"
+                             (editItem)="onEditAppointment($event)"
+                             (addCalendar)="onAddNewAppointmentOnHour($event)" />
         </mat-drawer-content>
       </mat-drawer-container>
     </div>
@@ -44,7 +49,10 @@ import {CalendarNewAppointmentComponent} from './components/calendar-new-appoint
 export class CalendarComponent {
   selectedDate = signal<Date>(new Date());
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {
+    this.selectedDate().setMinutes(0);
+    this.selectedDate().setSeconds(0);
+  }
 
   onAddNewAppointment(date: Date = this.selectedDate()): void {
     this.dialog.open(CalendarNewAppointmentComponent, {
@@ -55,9 +63,16 @@ export class CalendarComponent {
     })
   }
 
+  onEditAppointment(appointment: Appointment) {
+    this.dialog.open(CalendarEditAppointmentComponent, {
+      data: {
+        appointment
+      },
+      width: '600px'
+    })
+  }
+
   onAddNewAppointmentOnHour(hour: number): void {
-    const date = new Date(this.selectedDate().getTime());
-    date.setHours(hour);
-    this.onAddNewAppointment(date)
+    this.onAddNewAppointment(changeDateHour(this.selectedDate(), hour));
   }
 }

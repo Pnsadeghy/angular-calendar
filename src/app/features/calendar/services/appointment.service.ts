@@ -1,7 +1,8 @@
-import {Appointment} from '../interfaces/appointment.model';
+import {Appointment} from '../models/appointment.model';
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, map, Observable} from 'rxjs';
 import {isDateEqual} from '../../../shared/utils/date.utils';
+import {generateUUID} from '../../../shared/utils/string.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -9,73 +10,46 @@ import {isDateEqual} from '../../../shared/utils/date.utils';
 export class AppointmentService {
   private readonly STORAGE_KEY = 'appointments';
 
-  private _appointmentsSubject = new BehaviorSubject<Appointment[]>([]);
-  appointments$ = this._appointmentsSubject.asObservable();
+  private appointmentsSubject = new BehaviorSubject<Appointment[]>([]);
 
-  constructor() {
-    this.loadFromStorage();
+  list(): Observable<Appointment[]> {
+    return this.appointmentsSubject.asObservable();
   }
 
-  get currentAppointments(): Appointment[] {
-    return this._appointmentsSubject.value;
+  getAppointmentsByDate(date: Date): Observable<Appointment[]> {
+    return this.appointmentsSubject.asObservable().pipe(
+      map((appointments) =>
+        appointments.filter((a) => isDateEqual(a.date, date))
+      )
+    );
   }
 
   add(appointment: Appointment) {
-    if (!appointment.id) {
-      appointment.id = Date.now();
-    }
+    const currentAppointments = this.appointmentsSubject.value;
+    const newAppointment: Appointment = {
+      ...appointment,
+      id: generateUUID()
+    };
+    this.appointmentsSubject.next([...currentAppointments, newAppointment]);
+  }
 
-    const updated = [...this.currentAppointments, appointment];
-    this._appointmentsSubject.next(updated);
-    this.saveToStorage(updated);
+  delete(id: string) {
+    const currentAppointments = this.appointmentsSubject.value;
+    const updatedAppointments = currentAppointments.filter(
+      (a) => a.id !== id
+    );
+    this.appointmentsSubject.next(updatedAppointments);
   }
 
   update(updatedAppointment: Appointment) {
-    const appointments = [...this.currentAppointments];
-    const index = appointments.findIndex(a => a.id === updatedAppointment.id);
-
-    if (index === -1) {
-      console.warn(`Appointment with id ${updatedAppointment.id} not found!`);
-      return;
-    }
-
-    appointments[index] = updatedAppointment;
-
-    this._appointmentsSubject.next(appointments);
-    this.saveToStorage(appointments);
-  }
-
-  remove(appointmentId: number) {
-    const updated = this.currentAppointments.filter(a => a.id !== appointmentId);
-    this._appointmentsSubject.next(updated);
-    this.saveToStorage(updated);
-  }
-
-  getAll(): Appointment[] {
-    return this.currentAppointments;
-  }
-
-  getByDate(date: Date): Appointment[] {
-    return this.currentAppointments.filter(a => isDateEqual(a.date, date));
-  }
-
-  private saveToStorage(appointments: Appointment[]) {
-    const serialized = JSON.stringify(appointments);
-    localStorage.setItem(this.STORAGE_KEY, serialized);
-  }
-
-  private loadFromStorage() {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    if (data) {
-      try {
-        const arr = JSON.parse(data) as Appointment[];
-        arr.forEach(item => {
-          item.date = new Date(item.date);
-        });
-        this._appointmentsSubject.next(arr);
-      } catch (err) {
-        console.warn('Error parsing appointments from localStorage', err);
-      }
+    const currentAppointments = [...this.appointmentsSubject.value];
+    const index = currentAppointments.findIndex(
+      (a) => a.id === updatedAppointment.id
+    );
+    if (index !== -1) {
+      console.log(updatedAppointment, {...currentAppointments[index]});
+      currentAppointments[index] = { ...updatedAppointment };
+      this.appointmentsSubject.next([...currentAppointments]);
     }
   }
 }

@@ -5,7 +5,6 @@ import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-calendar-sidebar',
-  standalone: true,
   imports: [
     MatCalendar,
     MatButton,

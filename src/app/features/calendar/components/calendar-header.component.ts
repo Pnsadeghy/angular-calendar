@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-calendar-header',
-  standalone: true,
   template: `
     <div class="container" >
       <h1>Calendar application</h1>

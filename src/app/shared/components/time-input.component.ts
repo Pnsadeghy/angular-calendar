@@ -29,7 +29,7 @@ import {MatTimepicker, MatTimepickerInput, MatTimepickerToggle} from '@angular/m
              [formControl]="control()"
              [placeholder]="placeholder()">
       <mat-timepicker-toggle matIconSuffix [for]="picker"/>
-      <mat-timepicker #picker/>
+      <mat-timepicker interval="60min" #picker/>
     </mat-form-field>
   `,
   styles: ``
