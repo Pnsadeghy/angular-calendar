@@ -1,0 +1,27 @@
+.calendar-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-toolbar {
+  background: white;
+  border-bottom: solid thin #ccc;
+}
+
+mat-drawer-container {
+  flex: 1 1 auto;
+}
+
+mat-drawer {
+  border-inline-end: solid thin #ccc;
+  border-radius: 0;
+}
+
+mat-drawer-content {
+  background: white;
+}
+
+app-calendar-header {
+  flex: 1 1 auto;
+}
