@@ -22,15 +22,15 @@ import {Component, signal} from '@angular/core';
     <div class="calendar-container">
       <mat-toolbar>
         <app-calendar-header>
-          <app-calendar-day-input [(selected)]="selectedDate" />
+          <app-calendar-day-input [(selectedDate)]="selectedDate" />
         </app-calendar-header>
       </mat-toolbar>
       <mat-drawer-container>
         <mat-drawer mode="side" opened >
-          <app-calendar-sidebar [(selected)]="selectedDate" />
+          <app-calendar-sidebar [(selectedDate)]="selectedDate" />
         </mat-drawer>
         <mat-drawer-content>
-          <app-calendar-content />
+          <app-calendar-content [selectedDate]="selectedDate()" />
         </mat-drawer-content>
       </mat-drawer-container>
     </div>

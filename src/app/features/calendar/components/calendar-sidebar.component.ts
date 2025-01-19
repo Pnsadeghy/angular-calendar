@@ -8,7 +8,7 @@ import {Component, model} from '@angular/core';
   ],
   template: `
     <div class="container" >
-      <mat-calendar [(selected)]="selected"></mat-calendar>
+      <mat-calendar [(selected)]="selectedDate"></mat-calendar>
     </div>
   `,
   styles: `
@@ -18,5 +18,5 @@ import {Component, model} from '@angular/core';
   `
 })
 export class CalendarSidebarComponent {
-  selected = model<Date | null>(null);
+  selectedDate = model<Date | null>(null);
 }
