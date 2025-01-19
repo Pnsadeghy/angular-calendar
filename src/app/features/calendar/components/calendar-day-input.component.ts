@@ -3,7 +3,7 @@ import {Component, model} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 
 @Component({
-  selector: 'app-calendar-header-day-input',
+  selector: 'app-calendar-day-input',
   imports: [
     MatIconModule,
     MatIconButton
@@ -26,6 +26,6 @@ import {MatIconModule} from '@angular/material/icon';
     }
   `
 })
-export class CalendarHeaderDayInputComponent {
+export class CalendarDayInputComponent {
   selected = model<Date | null>(null);
 }

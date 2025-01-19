@@ -1,4 +1,4 @@
-import {CalendarHeaderDayInputComponent} from './components/calendar-header-day-input.component';
+import {CalendarDayInputComponent} from './components/calendar-day-input.component';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent} from '@angular/material/sidenav';
 import {CalendarContentComponent} from './components/calendar-content.component';
 import {CalendarSidebarComponent} from './components/calendar-sidebar.component';
@@ -16,13 +16,13 @@ import {Component, signal} from '@angular/core';
     CalendarSidebarComponent,
     CalendarContentComponent,
     MatToolbar,
-    CalendarHeaderDayInputComponent
+    CalendarDayInputComponent
   ],
   template: `
     <div class="calendar-container">
       <mat-toolbar>
         <app-calendar-header>
-          <app-calendar-header-day-input [(selected)]="selectedDate" />
+          <app-calendar-day-input [(selected)]="selectedDate" />
         </app-calendar-header>
       </mat-toolbar>
       <mat-drawer-container>
